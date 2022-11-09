@@ -1,5 +1,5 @@
 module CLI
-    class Questionairre
+  class Questionairre
 
     attr_reader :prompt
 
@@ -15,10 +15,12 @@ module CLI
 
       case type
       when 1
+        ask_question
+      when 2
         year = enter_year
-        find_fact_for_year(year)
+        fact_for_year(year)
       else
-        find_random_fact
+        random_fact
       end
     end
 
@@ -26,17 +28,29 @@ module CLI
 
     def type_choices
       {
-        Year: 1,
-        Random: 2
+        Question: 1,
+        Year: 2,
+        Random: 3
       }
     end
 
-    def find_fact_for_year(year)
+    def fact_for_year(year)
       puts "random fact for year #{year}"
     end
 
-    def find_random_fact
-      puts "random fact"
+    def ask_question
+      question = Question.random
+      their_answer = prompt.ask(question.question)
+
+      if their_answer.strip.downcase == question.answer.strip.downcase
+        puts "Well done!"
+      else
+        puts "wrong answer!"
+      end
+    end
+
+    def random_fact
+      Question.random
     end
 
     def enter_year
